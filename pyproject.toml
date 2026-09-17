@@ -1,6 +1,22 @@
+[project]
+name = "probe"
+version = "0.1.0"
+description = "Language-agnostic code graph engine"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "rich>=13.0.0",
+    "tree-sitter>=0.21.0",
+    "tree-sitter-python>=0.21.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [tool.ruff]
 line-length = 100
-target-version = "py314"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = [
@@ -16,5 +32,6 @@ indent-style = "space"
 
 [dependency-groups]
 dev = [
+    "pytest>=8.0.0",
     "ruff>=0.16.8",
 ]

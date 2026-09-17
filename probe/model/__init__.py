@@ -4,6 +4,8 @@ from probe.model.models import (
     LocationSpan,
     Node,
     NodeType,
+    ParseResult,
+    generate_node_id,
 )
 
 __all__ = [
@@ -12,4 +14,6 @@ __all__ = [
     "LocationSpan",
     "Node",
     "Edge",
+    "ParseResult",
+    "generate_node_id",
 ]
