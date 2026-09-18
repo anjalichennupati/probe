@@ -7,7 +7,7 @@ on:
     branches: [ main, "add/*" ]
 
 jobs:
-  lint-and-test:
+  linters-check:
     runs-on: ubuntu-latest
 
     steps:
