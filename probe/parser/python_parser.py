@@ -1,6 +1,5 @@
 import ast
 import os
-from typing import Any, Dict, List, Optional
 
 from probe.model.models import (
     Edge,
@@ -17,7 +16,7 @@ from probe.utils.logging import get_logger
 logger = get_logger("probe.parser.python")
 
 
-def _get_location_span(node: ast.AST) -> Optional[LocationSpan]:
+def _get_location_span(node: ast.AST) -> LocationSpan | None:
     """Extracts LocationSpan from an AST node if line numbers are present."""
     start_line = getattr(node, "lineno", None)
     start_col = getattr(node, "col_offset", None)
@@ -50,9 +49,9 @@ class PythonASTVisitor(ast.NodeVisitor):
     def __init__(self, file_path: str, code_content: str) -> None:
         self.file_path = file_path
         self.code_content = code_content
-        self.nodes: List[Node] = []
-        self.edges: List[Edge] = []
-        self.errors: List[str] = []
+        self.nodes: list[Node] = []
+        self.edges: list[Edge] = []
+        self.errors: list[str] = []
 
         # Derive module detailed_name from file path without regex
         rel_path = os.path.normpath(file_path)
@@ -85,7 +84,7 @@ class PythonASTVisitor(ast.NodeVisitor):
         self.nodes.append(self.root_node)
 
         # Scope stack tracks parent nodes and detailed names during traversal
-        self.scope_stack: List[Node] = [self.root_node]
+        self.scope_stack: list[Node] = [self.root_node]
 
     @property
     def current_parent(self) -> Node:
@@ -141,9 +140,7 @@ class PythonASTVisitor(ast.NodeVisitor):
     def _visit_function(self, node: ast.AST, name: str, is_async: bool = False) -> None:
         dname = self._build_detailed_name(name)
         node_type = (
-            NodeType.METHOD
-            if self.current_parent.type == NodeType.CLASS
-            else NodeType.FUNCTION
+            NodeType.METHOD if self.current_parent.type == NodeType.CLASS else NodeType.FUNCTION
         )
         node_id = generate_node_id(self.file_path, dname, node_type)
         span = _get_location_span(node)
@@ -214,7 +211,11 @@ class PythonASTVisitor(ast.NodeVisitor):
                     source_id=self.root_node.id,
                     target_id=full_name,
                     type=EdgeType.IMPORTS,
-                    metadata={"module": module, "alias": alias.asname} if alias.asname else {"module": module},
+                    metadata=(
+                        {"module": module, "alias": alias.asname}
+                        if alias.asname
+                        else {"module": module}
+                    ),
                 )
             )
 
@@ -226,15 +227,15 @@ class PythonParser(BaseParser):
     def language(self) -> str:
         return "python"
 
-    def load_language(self, language: Optional[str] = None) -> None:
+    def load_language(self, language: str | None = None) -> None:
         logger.debug("Initializing Python AST Parser environment")
 
-    def parse_file(self, file_path: str, content: Optional[str] = None) -> ParseResult:
+    def parse_file(self, file_path: str, content: str | None = None) -> ParseResult:
         logger.info(f"Parsing Python file [cyan]{file_path}[/cyan]")
 
         if content is None:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
             except Exception as e:
                 error_msg = f"File read error: {str(e)}"
