@@ -1,10 +1,10 @@
 import hashlib
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Dict, List, Optional
+from enum import StrEnum
+from typing import Any
 
 
-class NodeType(str, Enum):
+class NodeType(StrEnum):
     FILE = "file"
     MODULE = "module"
     CLASS = "class"
@@ -13,7 +13,7 @@ class NodeType(str, Enum):
     VARIABLE = "variable"
 
 
-class EdgeType(str, Enum):
+class EdgeType(StrEnum):
     CONTAINS = "contains"
     IMPORTS = "imports"
     CALLS = "calls"
@@ -43,10 +43,10 @@ class Node:
     name: str
     detailed_name: str
     file_path: str
-    parent_id: Optional[str] = None
-    span: Optional[LocationSpan] = None
-    docstring: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    parent_id: str | None = None
+    span: LocationSpan | None = None
+    docstring: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -54,12 +54,12 @@ class Edge:
     source_id: str
     target_id: str
     type: EdgeType
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class ParseResult:
     file_path: str
-    nodes: List[Node] = field(default_factory=list)
-    edges: List[Edge] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
+    nodes: list[Node] = field(default_factory=list)
+    edges: list[Edge] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)

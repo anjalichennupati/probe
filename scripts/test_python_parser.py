@@ -1,13 +1,13 @@
-from dataclasses import asdict
 import json
 import os
 import sys
+from dataclasses import asdict
 
 # Ensure repository root is in sys.path for standalone script execution
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from probe.model.models import EdgeType, NodeType
-from probe.parser import BaseParser, ParserRegistry, PythonParser, detect_language
+from probe.parser import ParserRegistry, PythonParser, detect_language
 
 
 def test_detect_language() -> None:
