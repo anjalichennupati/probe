@@ -52,7 +52,8 @@ class Node:
 @dataclass
 class Edge:
     source_id: str
-    target_id: str
+    target_id: str | None
+    target_ref: str | None
     type: EdgeType
     metadata: dict[str, Any] = field(default_factory=dict)
 

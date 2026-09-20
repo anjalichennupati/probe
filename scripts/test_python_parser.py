@@ -74,6 +74,8 @@ def main():
     assert circle_node.type == NodeType.CLASS
     assert circle_node.detailed_name == "graphics.shapes.Circle"
 
+    shape_node = next(n for n in result.nodes if n.name == "Shape")
+
     area_node = next(n for n in result.nodes if n.name == "area")
     assert area_node.type == NodeType.METHOD
     assert area_node.parent_id == circle_node.id
@@ -91,17 +93,21 @@ def main():
     # Inheritance edge: Circle -> Shape
     inherits_edge = next(e for e in result.edges if e.type == EdgeType.INHERITS)
     assert inherits_edge.source_id == circle_node.id
-    assert inherits_edge.target_id == "Shape"
+    assert inherits_edge.target_id == shape_node.id
+    assert inherits_edge.target_ref is None
 
     # Imports edges
-    import_targets = [e.target_id for e in result.edges if e.type == EdgeType.IMPORTS]
+    import_targets = [e.target_ref for e in result.edges if e.type == EdgeType.IMPORTS]
     assert "os" in import_targets
     assert "math.sqrt" in import_targets
+    assert all(e.target_id is None for e in result.edges if e.type == EdgeType.IMPORTS)
 
     # Calls edges (area() calls sqrt)
     call_edges = [e for e in result.edges if e.type == EdgeType.CALLS]
     caller_ids = [e.source_id for e in call_edges]
     assert area_node.id in caller_ids
+    assert {e.target_ref for e in call_edges} == {"sqrt", "Circle", "print", "c.area"}
+    assert all(e.target_id is None for e in call_edges)
 
 
 def test_python_parser_syntax_error() -> None:

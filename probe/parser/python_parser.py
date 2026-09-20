@@ -94,6 +94,12 @@ class PythonASTVisitor(ast.NodeVisitor):
         parent_detailed_name = self.current_parent.detailed_name
         return f"{parent_detailed_name}.{name}" if parent_detailed_name else name
 
+    def _find_node_id(self, reference: str) -> str | None:
+        for node in self.nodes:
+            if node.name == reference or node.detailed_name == reference:
+                return node.id
+        return None
+
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         dname = self._build_detailed_name(node.name)
         node_id = generate_node_id(self.file_path, dname, NodeType.CLASS)
@@ -117,6 +123,7 @@ class PythonASTVisitor(ast.NodeVisitor):
             Edge(
                 source_id=self.current_parent.id,
                 target_id=class_node.id,
+                target_ref=None,
                 type=EdgeType.CONTAINS,
             )
         )
@@ -125,10 +132,12 @@ class PythonASTVisitor(ast.NodeVisitor):
         for base in node.bases:
             base_name = _get_name_from_attribute(base)
             if base_name:
+                base_id = self._find_node_id(base_name)
                 self.edges.append(
                     Edge(
                         source_id=class_node.id,
-                        target_id=base_name,
+                        target_id=base_id,
+                        target_ref=None if base_id else base_name,
                         type=EdgeType.INHERITS,
                     )
                 )
@@ -164,6 +173,7 @@ class PythonASTVisitor(ast.NodeVisitor):
             Edge(
                 source_id=self.current_parent.id,
                 target_id=func_node.id,
+                target_ref=None,
                 type=EdgeType.CONTAINS,
             )
         )
@@ -185,7 +195,8 @@ class PythonASTVisitor(ast.NodeVisitor):
                 self.edges.append(
                     Edge(
                         source_id=self.current_parent.id,
-                        target_id=func_name,
+                        target_id=None,
+                        target_ref=func_name,
                         type=EdgeType.CALLS,
                     )
                 )
@@ -196,7 +207,8 @@ class PythonASTVisitor(ast.NodeVisitor):
             self.edges.append(
                 Edge(
                     source_id=self.root_node.id,
-                    target_id=alias.name,
+                    target_id=None,
+                    target_ref=alias.name,
                     type=EdgeType.IMPORTS,
                     metadata={"alias": alias.asname} if alias.asname else {},
                 )
@@ -209,7 +221,8 @@ class PythonASTVisitor(ast.NodeVisitor):
             self.edges.append(
                 Edge(
                     source_id=self.root_node.id,
-                    target_id=full_name,
+                    target_id=None,
+                    target_ref=full_name,
                     type=EdgeType.IMPORTS,
                     metadata=(
                         {"module": module, "alias": alias.asname}
