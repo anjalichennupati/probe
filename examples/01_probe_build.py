@@ -12,7 +12,7 @@ from probe import init
 
 PROJECT_NAME = "hello"
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-TARGET_PATH = Path("/Users/anjalichennupati/ML/probe/probe/tests/test_setup.py")
+TARGET_PATH = Path("/Users/anjalichennupati/ML/probe/tests/test_setup.py")
 
 
 def main() -> None:
