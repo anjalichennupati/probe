@@ -1,6 +1,6 @@
 [project]
 name = "probe"
-version = "0.1.0"
+version = "1.0.2"
 description = "Language-agnostic code graph engine"
 readme = "README.md"
 requires-python = ">=3.11"
