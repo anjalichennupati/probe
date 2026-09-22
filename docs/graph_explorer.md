@@ -142,18 +142,20 @@ Hashes are the same values used by storage for node-version tracking. They are n
 
 ### Main Explorer View
 
-![Main Probe Graph Explorer view](assets/graph-explorer/image%20copy%203.png)
+<img width="1280" height="638" alt="image" src="https://github.com/user-attachments/assets/820be5e3-62b0-4096-b51d-8302c8dc8ba6" />
+
 
 ### Node Filtering
 
-![Probe Graph Explorer node filtering](assets/graph-explorer/image%20copy.png)
+<img width="1280" height="638" alt="image" src="https://github.com/user-attachments/assets/a6d95957-021b-45e8-b8c3-6aef6a431adb" />
+
 
 ### Relationship Filtering
 
-![Probe Graph Explorer contains relationship filtering](assets/graph-explorer/image%20copy%202.png)
+<img width="1280" height="635" alt="image" src="https://github.com/user-attachments/assets/d846e4cb-a2ab-4374-a85b-5fb0276e3e3f" />
 
 ### Inheritance Filtering
 
-![Probe Graph Explorer inheritance filtering](assets/graph-explorer/image.png)
+<img width="1280" height="639" alt="image" src="https://github.com/user-attachments/assets/56f0de31-da80-4f20-9480-ea08b65f5e46" />
 
 The inheritance view makes the `PythonParser` to `BaseParser` relationship directly visible.
