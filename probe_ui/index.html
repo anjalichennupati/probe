@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probe Graph Explorer</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">PROBE / GRAPH EXPLORER</p>
+      <h1>View Probe Code relationships.</h1>
+    </div>
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search symbols or files" aria-label="Search graph">
+      <button class="filter-toggle" data-filter="nodes" type="button" aria-pressed="false">Nodes</button>
+      <button class="filter-toggle" data-filter="relationships" type="button" aria-pressed="false">Relationships</button>
+      <button id="focus" type="button">Focus selection</button>
+      <button id="reset" type="button">Reset view</button>
+    </div>
+  </header>
+  <main class="workspace">
+    <section class="graph-panel" aria-label="Interactive graph">
+      <div class="legend">
+        <span><i class="dot class"></i>class</span>
+        <span><i class="dot function"></i>function</span>
+        <span><i class="dot method"></i>method</span>
+        <span><i class="line"></i>relationship</span>
+      </div>
+      <canvas id="graph" aria-label="Probe relationship graph"></canvas>
+      <div id="status" class="status">Loading graph...</div>
+    </section>
+    <section id="inspector" class="inspector" aria-live="polite">
+      <div class="empty-state">
+        <span class="signal">↗</span>
+        <p>Select a node to inspect source context and relationships.</p>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
