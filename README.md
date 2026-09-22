@@ -46,7 +46,7 @@ Storage writes the latest graph and node history as human-readable JSON. Each pr
 
 The Graph Explorer is a small interactive view over a named project's persisted graph. It shows semantic entities and relationships, supports node and relationship filtering, and exposes unresolved references such as `BaseParser` without changing the underlying graph.
 
-![Probe Graph Explorer showing node filtering and relationships](docs/assets/graph-explorer/image%20copy%203.png)
+<img width="1280" height="638" alt="image" src="https://github.com/user-attachments/assets/9744d126-affc-47f9-8c27-ea754d438222" />
 
 The explorer reads `.probe/<project_name>/graph.json`; it does not rebuild a second graph for the UI.
 
