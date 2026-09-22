@@ -42,6 +42,14 @@ The builder turns normalized parser output into the current knowledge graph. It 
 
 Storage writes the latest graph and node history as human-readable JSON. Each project has its own storage directory. A node receives a new history entry only when its meaningful content changes. Git commit identifiers and UTC timestamps provide the context for each recorded version.
 
+### Graph Explorer
+
+The Graph Explorer is a small interactive view over a named project's persisted graph. It shows semantic entities and relationships, supports node and relationship filtering, and exposes unresolved references such as `BaseParser` without changing the underlying graph.
+
+<img width="1280" height="638" alt="image" src="https://github.com/user-attachments/assets/9744d126-affc-47f9-8c27-ea754d438222" />
+
+The explorer reads `.probe/<project_name>/graph.json`; it does not rebuild a second graph for the UI.
+
 ## Uses
 
 Probe is intended to support:
@@ -77,3 +85,4 @@ Changing the project name creates a separate project directory under `.probe`, k
 - [Parser](docs/parser.md)
 - [Builder](docs/builder.md)
 - [Storage](docs/storage.md)
+- [Graph Explorer](docs/graph_explorer.md)

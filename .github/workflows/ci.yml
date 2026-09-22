@@ -2,9 +2,9 @@ name: Probe Workflow Check
 
 on:
   push:
-    branches: [ main, "add/*" ]
+    branches: [ main, master, "add/*" ]
   pull_request:
-    branches: [ main, "add/*" ]
+    branches: [ main, master, "add/*" ]
 
 jobs:
   linters-check:
