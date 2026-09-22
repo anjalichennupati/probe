@@ -1,4 +1,4 @@
-name: CI
+name: Probe Workflow Check
 
 on:
   push:
@@ -25,8 +25,26 @@ jobs:
           pip install .
           pip install ruff pytest
 
-      - name: Run Ruff Linter
+      - name: Run Ruff
         run: ruff check .
+
+      - name: Check Ruff Formatting
+        run: ruff format --check .
 
       - name: Run Pytest
         run: python -m pytest scripts/
+
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          extra_args: --only-verified
