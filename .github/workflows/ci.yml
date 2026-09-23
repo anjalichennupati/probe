@@ -1,4 +1,4 @@
-name: Probe Workflow Check
+name: Probe Code Check
 
 on:
   push:
