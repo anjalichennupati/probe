@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from probe.builder.graph import Graph
 from probe.context.assembler import ContextAssembler
-from probe.context.models import ContextCandidate, ContextPackage, ContextRequest
+from probe.context.models import ContextCandidate, ContextPackage, ContextRequest, ContextSource
 from probe.context.ranking import rank_candidates
 from probe.context.traversal import discover_candidates, resolve_entity_ids
 
@@ -48,16 +48,20 @@ class ContextEngine:
                     entity_type=target_node.type.value,
                     graph_distance=0,
                     discovery_paths=[f"seed:{target_node.id}"],
-                    source_file=target_node.file_path,
-                    source_span=(
-                        (target_node.span.start_line, target_node.span.end_line)
-                        if target_node.span is not None
-                        else None
+                    source=ContextSource(
+                        file=target_node.file_path,
+                        span=(
+                            [target_node.span.start_line, target_node.span.end_line]
+                            if target_node.span is not None
+                            else None
+                        ),
                     ),
                     reason="target entity",
                     metadata={"entity_type": target_node.type.value},
                 )
-                discovered = [target_candidate] + [item for item in discovered if item.entity_id != target_node.id]
+                discovered = [target_candidate] + [
+                    item for item in discovered if item.entity_id != target_node.id
+                ]
 
         ranked_candidates, fallback_used = rank_candidates(discovered, request)
         ordered_candidates = sorted(
@@ -67,7 +71,12 @@ class ContextEngine:
         )[: request.max_candidates]
 
         snippets = self.assembler.assemble(request, ordered_candidates)
-        omissions = [candidate.entity_id for candidate in ordered_candidates if candidate.entity_id not in {snippet.entity_id for snippet in snippets}]
+        snippet_ids = {snippet.entity_id for snippet in snippets}
+        omissions = [
+            candidate.entity_id
+            for candidate in ordered_candidates
+            if candidate.entity_id not in snippet_ids
+        ]
 
         return ContextPackage(
             request=request,
@@ -77,7 +86,11 @@ class ContextEngine:
             unresolved=unresolved,
             fallback_used=fallback_used,
             budget_used=sum(len(snippet.text) for snippet in snippets),
-            completion="complete" if len(snippets) == len(ordered_candidates) and not omissions else "partial",
+            completion=(
+                "complete"
+                if len(snippets) == len(ordered_candidates) and not omissions
+                else "partial"
+            ),
         )
 
     def retrieve(self, request: ContextRequest) -> ContextPackage:

@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from probe.builder.graph import Graph
-from probe.context.models import ContextCandidate, ContextRequest, ContextSnippet
+from probe.context.models import ContextCandidate, ContextLines, ContextRequest, ContextSnippet
 
 
 class ContextAssembler:
@@ -19,7 +19,12 @@ class ContextAssembler:
         except Exception:
             return []
 
-    def _build_snippet(self, candidate: ContextCandidate, *, node_path: str | None = None) -> ContextSnippet | None:
+    def _build_snippet(
+        self,
+        candidate: ContextCandidate,
+        *,
+        node_path: str | None = None,
+    ) -> ContextSnippet | None:
         path = node_path or candidate.source_file
         if not path:
             return None
@@ -29,8 +34,7 @@ class ContextAssembler:
             return ContextSnippet(
                 entity_id=candidate.entity_id,
                 path=path,
-                start_line=1,
-                end_line=1,
+                lines=ContextLines(start=1, end=1),
                 text=f"# Source unavailable for {candidate.entity_id}",
                 score=candidate.score,
                 rationale=candidate.rationale,
@@ -50,14 +54,17 @@ class ContextAssembler:
         return ContextSnippet(
             entity_id=candidate.entity_id,
             path=path,
-            start_line=start,
-            end_line=end,
+            lines=ContextLines(start=start, end=end),
             text=text,
             score=candidate.score,
             rationale=candidate.rationale,
         )
 
-    def assemble(self, request: ContextRequest, candidates: list[ContextCandidate]) -> list[ContextSnippet]:
+    def assemble(
+        self,
+        request: ContextRequest,
+        candidates: list[ContextCandidate],
+    ) -> list[ContextSnippet]:
         request.validate()
         snippets: list[ContextSnippet] = []
         budget_used = 0

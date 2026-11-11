@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from collections import deque
-from typing import Iterable
+from collections.abc import Iterable
 
 from probe.builder.graph import Graph
-from probe.model.models import Node
-from probe.context.models import ContextCandidate
+from probe.context.models import ContextCandidate, ContextSource
 
 
 def resolve_entity_ids(graph: Graph, identifiers: Iterable[str]) -> tuple[list[str], list[str]]:
@@ -74,11 +73,13 @@ def discover_candidates(
                     entity_type=next_node.type.value,
                     graph_distance=next_distance,
                     discovery_paths=[f"{node_id}:{edge.type.value}:{edge.target_id}"],
-                    source_file=next_node.file_path,
-                    source_span=(
-                        (next_node.span.start_line, next_node.span.end_line)
-                        if next_node.span is not None
-                        else None
+                    source=ContextSource(
+                        file=next_node.file_path,
+                        span=(
+                            [next_node.span.start_line, next_node.span.end_line]
+                            if next_node.span is not None
+                            else None
+                        ),
                     ),
                     reason=f"reachable via {edge.type.value}",
                     metadata={"edge_type": edge.type.value},
@@ -109,11 +110,13 @@ def discover_candidates(
                     entity_type=source_node.type.value,
                     graph_distance=next_distance,
                     discovery_paths=[f"{edge.source_id}:{edge.type.value}:{node_id}"],
-                    source_file=source_node.file_path,
-                    source_span=(
-                        (source_node.span.start_line, source_node.span.end_line)
-                        if source_node.span is not None
-                        else None
+                    source=ContextSource(
+                        file=source_node.file_path,
+                        span=(
+                            [source_node.span.start_line, source_node.span.end_line]
+                            if source_node.span is not None
+                            else None
+                        ),
                     ),
                     reason=f"reachable via {edge.type.value} from {node_id}",
                     metadata={"edge_type": edge.type.value},
