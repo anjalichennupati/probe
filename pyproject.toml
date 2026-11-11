@@ -17,6 +17,12 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["probe", "probe_ui"]
 
+[tool.probe.llm]
+provider = "openrouter"
+model = "openai/gpt-4o-mini"
+enabled = true
+timeout = 30.0
+retries = 2
 
 [tool.ruff]
 line-length = 100
