@@ -1,5 +1,3 @@
-from types import SimpleNamespace
-
 import pytest
 
 from probe.providers.base import ProviderError

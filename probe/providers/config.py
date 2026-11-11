@@ -72,7 +72,9 @@ class LLMConfig:
 
 def load_llm_config() -> LLMConfig:
     pyproject_settings = read_pyproject_settings()
-    provider = os.getenv("PROBE_LLM_PROVIDER") or pyproject_settings.get("provider") or DEFAULT_PROVIDER
+    provider_env = os.getenv("PROBE_LLM_PROVIDER")
+    provider_setting = pyproject_settings.get("provider")
+    provider = provider_env or provider_setting or DEFAULT_PROVIDER
     model = os.getenv("PROBE_LLM_MODEL") or pyproject_settings.get("model") or DEFAULT_MODEL
     enabled_value = os.getenv("PROBE_LLM_ENABLED")
     if enabled_value is None:
@@ -83,18 +85,26 @@ def load_llm_config() -> LLMConfig:
     api_key = os.getenv("OPENROUTER_API_KEY")
     timeout_value = os.getenv("PROBE_LLM_TIMEOUT")
     if timeout_value is None:
-        timeout = parse_timeout(pyproject_settings.get("timeout", DEFAULT_TIMEOUT), field_name="timeout")
+        timeout = parse_timeout(
+            pyproject_settings.get("timeout", DEFAULT_TIMEOUT),
+            field_name="timeout",
+        )
     else:
         timeout = parse_timeout(timeout_value, field_name="PROBE_LLM_TIMEOUT")
 
     retries_value = os.getenv("PROBE_LLM_RETRIES")
     if retries_value is None:
-        retries = parse_retry_count(pyproject_settings.get("retries", DEFAULT_RETRIES), field_name="retries")
+        retries = parse_retry_count(
+            pyproject_settings.get("retries", DEFAULT_RETRIES),
+            field_name="retries",
+        )
     else:
         retries = parse_retry_count(retries_value, field_name="PROBE_LLM_RETRIES")
 
     if provider != DEFAULT_PROVIDER:
-        raise ValueError(f"Unsupported provider '{provider}'. Only '{DEFAULT_PROVIDER}' is currently supported.")
+        raise ValueError(
+            f"Unsupported provider '{provider}'. Only '{DEFAULT_PROVIDER}' is currently supported."
+        )
     if not enabled:
         return LLMConfig(
             provider=provider,

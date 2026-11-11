@@ -29,12 +29,15 @@ def build_provider(config: LLMConfig | None = None, **kwargs: object) -> BasePro
     """Construct the configured provider."""
     resolved_config = config or load_llm_config()
     if not resolved_config.enabled:
-        raise ProviderConfigurationError("LLM ranking is disabled. Enable it to construct a provider.")
+        raise ProviderConfigurationError(
+            "LLM ranking is disabled. Enable it to construct a provider."
+        )
 
     provider_name = str(resolved_config.provider).lower()
     if provider_name not in REGISTERED_PROVIDERS:
         raise ProviderConfigurationError(
-            f"Unsupported LLM provider '{resolved_config.provider}'. Supported providers: {sorted(REGISTERED_PROVIDERS)}"
+            f"Unsupported LLM provider '{resolved_config.provider}'. "
+            f"Supported providers: {sorted(REGISTERED_PROVIDERS)}"
         )
 
     provider_cls = REGISTERED_PROVIDERS[provider_name]

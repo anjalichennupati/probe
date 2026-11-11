@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Iterable, Mapping
+from collections.abc import Iterable, Mapping
+from typing import Any
 from urllib import request
 from urllib.error import HTTPError, URLError
-
-urlopen = request.urlopen
 
 from probe.providers.base import (
     AuthenticationError,
@@ -16,6 +15,8 @@ from probe.providers.base import (
     RateLimitError,
     TimeoutError,
 )
+
+urlopen = request.urlopen
 
 DEFAULT_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -119,7 +120,9 @@ class OpenRouterProvider(BaseProvider):
                         raise InvalidResponseError("OpenRouter returned malformed choice data.")
                     message = first_choice.get("message") or {}
                     if not isinstance(message, dict):
-                        raise InvalidResponseError("OpenRouter returned an invalid message payload.")
+                        raise InvalidResponseError(
+                            "OpenRouter returned an invalid message payload."
+                        )
                     text = self.extract_text(message)
                     if text == "" and "content" in message:
                         text = str(message["content"])
@@ -141,7 +144,9 @@ class OpenRouterProvider(BaseProvider):
                 last_error = exc
                 code = getattr(exc, "code", None)
                 if code == 401 or code == 403:
-                    raise AuthenticationError(f"OpenRouter rejected the API key or request: {code}") from exc
+                    raise AuthenticationError(
+                        f"OpenRouter rejected the API key or request: {code}"
+                    ) from exc
                 if code == 429:
                     if attempt < self.retries:
                         continue
@@ -165,7 +170,9 @@ class OpenRouterProvider(BaseProvider):
                 last_error = exc
                 if attempt < self.retries:
                     continue
-                raise ProviderFailureError(f"OpenRouter request failed unexpectedly: {exc}") from exc
+                raise ProviderFailureError(
+                    f"OpenRouter request failed unexpectedly: {exc}"
+                ) from exc
 
         if last_error is not None:
             raise ProviderFailureError(f"OpenRouter request failed: {last_error}")

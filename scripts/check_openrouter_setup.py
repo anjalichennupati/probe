@@ -6,8 +6,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from probe.providers.config import load_llm_config
-from probe.providers.registry import build_provider
+from probe.providers.config import load_llm_config  # noqa: E402
+from probe.providers.registry import build_provider  # noqa: E402
 
 
 def main() -> None:
@@ -28,9 +28,9 @@ def main() -> None:
     print("provider_class:", type(provider).__name__)
     print("provider_model:", provider.model)
 
-    payload = provider.build_request_payload([
-        {"role": "user", "content": "Say hello in one word."}
-    ])
+    payload = provider.build_request_payload(
+        [{"role": "user", "content": "Say hello in one word."}]
+    )
     print("request_payload:", payload)
 
 
