@@ -86,3 +86,4 @@ Changing the project name creates a separate project directory under `.probe`, k
 - [Builder](docs/builder.md)
 - [Storage](docs/storage.md)
 - [Graph Explorer](docs/graph_explorer.md)
+- [Context Retrieval and LLM Ranking](docs/context_retrieval.md)
