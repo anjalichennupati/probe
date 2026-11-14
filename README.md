@@ -1,6 +1,6 @@
 # Probe
 
-Probe is a language-agnostic code knowledge graph builder whose central goal is to turn source code into a persistent knowledge graph.
+Probe is a Python based Pre Push PR Agent & graph builder whose central goal is to turn source code into a persistent knowledge graph.
 
 ## Goal
 
